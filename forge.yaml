@@ -1,0 +1,17 @@
+workspace:
+  root: workspace/
+  structure:
+    - briefs
+    - profiles
+    - snapshots
+
+scaffold:
+  - context/distribution.yaml
+  - context/signal-weights.md
+  - agents/analyzers/0_ANALYZERS.md
+  - agents/analyzers/swot-analyzer.md
+  - agents/extractors/0_EXTRACTORS.md
+  - agents/extractors/changelog-extractor.md
+  - agents/extractors/positioning-extractor.md
+  - agents/synthesizers/0_SYNTHESIZERS.md
+  - agents/synthesizers/market-synthesizer.md

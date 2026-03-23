@@ -1,0 +1,31 @@
+# competitors.yaml — Competitor Registry
+#
+# Copy this file to context/competitors.yaml and fill it in.
+# Run /competitive-analysis:setup for a guided setup flow.
+#
+# Tiers:
+#   direct       — run weekly (every 7 days)
+#   adjacent     — run monthly (every 30 days)
+#   aspirational — run quarterly (every 90 days)
+
+competitors:
+  - name: Example Direct Competitor
+    website: https://example.com
+    tier: direct
+    last_updated: ~          # set to YYYY-MM-DD after first run
+    changelog_url: ~         # set if changelog-extractor discovers a URL
+    notes: ~                 # optional: anything the extractors should know
+
+  - name: Example Adjacent Player
+    website: https://adjacent.example.com
+    tier: adjacent
+    last_updated: ~
+    changelog_url: ~
+    notes: ~
+
+  - name: Example Aspirational
+    website: https://aspirational.example.com
+    tier: aspirational
+    last_updated: ~
+    changelog_url: ~
+    notes: ~
