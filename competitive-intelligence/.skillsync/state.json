@@ -1,0 +1,226 @@
+{
+  "artifacts": {
+    "command:help": {
+      "kind": "command",
+      "name": "ci:help",
+      "semanticHash": "49cd24d6218548d127518049a9631fe1efa5a4f5a51d07311be2a0a75e874353",
+      "outputs": [
+        ".claude/commands/ci:help.md",
+        ".codex/commands/ci:help.md",
+        ".agents/commands/ci:help.md"
+      ]
+    },
+    "command:import": {
+      "kind": "command",
+      "name": "ci:import",
+      "semanticHash": "c0dc2d77bf7e1ba3eb5ab50dd83af02350261e622d7dfd0f4b742fe8c4bf8335",
+      "outputs": [
+        ".claude/commands/ci:import.md",
+        ".codex/commands/ci:import.md",
+        ".agents/commands/ci:import.md"
+      ]
+    },
+    "command:market": {
+      "kind": "command",
+      "name": "ci:market",
+      "semanticHash": "846fb5862215dfca2e0877a88c6834ddf0e096e38722f3c3a846d01f3a343715",
+      "outputs": [
+        ".claude/commands/ci:market.md",
+        ".codex/commands/ci:market.md",
+        ".agents/commands/ci:market.md"
+      ]
+    },
+    "command:new": {
+      "kind": "command",
+      "name": "ci:new",
+      "semanticHash": "4bb308d787c4ab6e0c48fa6eb4176920f79ca8baf5e1ab46ae57d5adf1f2e4c1",
+      "outputs": [
+        ".claude/commands/ci:new.md",
+        ".codex/commands/ci:new.md",
+        ".agents/commands/ci:new.md"
+      ]
+    },
+    "command:profile": {
+      "kind": "command",
+      "name": "ci:profile",
+      "semanticHash": "99f333fe1ca0674e59a99c380a00203e5ea4ef782f0b802bc8e7e91d8111eefe",
+      "outputs": [
+        ".claude/commands/ci:profile.md",
+        ".codex/commands/ci:profile.md",
+        ".agents/commands/ci:profile.md"
+      ]
+    },
+    "command:publish-brief": {
+      "kind": "command",
+      "name": "ci:publish-brief",
+      "semanticHash": "a80ade86958b049e2df1facdbe57486a4a632e6405acb9c627fdf117e9c6e4f5",
+      "outputs": [
+        ".claude/commands/ci:publish-brief.md",
+        ".codex/commands/ci:publish-brief.md",
+        ".agents/commands/ci:publish-brief.md"
+      ]
+    },
+    "command:run": {
+      "kind": "command",
+      "name": "ci:run",
+      "semanticHash": "fcbcccd76305eaace09312bf55442bce3b529fd0c3ebbdc62b31d04943debd9d",
+      "outputs": [
+        ".claude/commands/ci:run.md",
+        ".codex/commands/ci:run.md",
+        ".agents/commands/ci:run.md"
+      ]
+    },
+    "command:schedule": {
+      "kind": "command",
+      "name": "ci:schedule",
+      "semanticHash": "acb36bb6c186e3ea1c1e88f097d5ce278665b203d1337e8c0906d60e411c06e7",
+      "outputs": [
+        ".claude/commands/ci:schedule.md",
+        ".codex/commands/ci:schedule.md",
+        ".agents/commands/ci:schedule.md"
+      ]
+    },
+    "command:setup": {
+      "kind": "command",
+      "name": "ci:setup",
+      "semanticHash": "e475bf70d66d75c9c2f558fd663e876b01ce3389c4cebd45eb56966759d8d2c0",
+      "outputs": [
+        ".claude/commands/ci:setup.md",
+        ".codex/commands/ci:setup.md",
+        ".agents/commands/ci:setup.md"
+      ]
+    },
+    "command:status": {
+      "kind": "command",
+      "name": "ci:status",
+      "semanticHash": "d313cee607fa9fa92dfa0ab4ef54373e7966f71de85a45bfab294ff8cb5eaf63",
+      "outputs": [
+        ".claude/commands/ci:status.md",
+        ".codex/commands/ci:status.md",
+        ".agents/commands/ci:status.md"
+      ]
+    }
+  },
+  "generatedFiles": {
+    ".claude/commands/ci:help.md": {
+      "artifactId": "command:help",
+      "contentHash": "e1d17fa9ea84abe427d1a8a2b34cb786a571ffb45849c2b4e974cbc6370a7662"
+    },
+    ".codex/commands/ci:help.md": {
+      "artifactId": "command:help",
+      "contentHash": "95fecafbadfee77373a13c9f1b60a12bcb7fc486e95018d175620613ee0349d3"
+    },
+    ".agents/commands/ci:help.md": {
+      "artifactId": "command:help",
+      "contentHash": "97d3bd61cd74ac27b95039b34f46f181df31a47a33d0bc02e94ca5eac3f78721"
+    },
+    ".claude/commands/ci:import.md": {
+      "artifactId": "command:import",
+      "contentHash": "7f3afd134c1e6a2902579bb3047ad209abf4ae0a8dff4b2af6a0efdb4c10ecf5"
+    },
+    ".codex/commands/ci:import.md": {
+      "artifactId": "command:import",
+      "contentHash": "02ed5848a32ce74779cbf1e8b6dc4fd58f4e91da63f24ea5827ac401eaad96da"
+    },
+    ".agents/commands/ci:import.md": {
+      "artifactId": "command:import",
+      "contentHash": "d96362eac3718c8f9351b5f1b823eb5cc33fa09501ad5ec24bd684ee2317d446"
+    },
+    ".claude/commands/ci:market.md": {
+      "artifactId": "command:market",
+      "contentHash": "1fe0a93ef8076057af2eb2af38abfb9a378396eb9290759871418947825e181a"
+    },
+    ".codex/commands/ci:market.md": {
+      "artifactId": "command:market",
+      "contentHash": "72c5812ce8cce62f4d58e33c452cda3154aae26b78582123c01931744ed8a494"
+    },
+    ".agents/commands/ci:market.md": {
+      "artifactId": "command:market",
+      "contentHash": "71b26d9c3559029dd0013f8a1429d4c457966275dc04087deafaa05783272700"
+    },
+    ".claude/commands/ci:new.md": {
+      "artifactId": "command:new",
+      "contentHash": "5d23248b59676f6d281fd24750b5c17bc113ecf6ab956bc722bf91d65d39dfae"
+    },
+    ".codex/commands/ci:new.md": {
+      "artifactId": "command:new",
+      "contentHash": "86a6ea0db887d469b4ecd972afbcc62ab6c8cbc55f1eaac176a2db4faa84d1a8"
+    },
+    ".agents/commands/ci:new.md": {
+      "artifactId": "command:new",
+      "contentHash": "ca1ed7c329880c490b9ee5eec6326f6b8f5b21e97e51e38ffb135a6aaa6bb33b"
+    },
+    ".claude/commands/ci:profile.md": {
+      "artifactId": "command:profile",
+      "contentHash": "695953c1dc72e0ae0b1a3deb2d7f454ca3241f2152747a86c6a998e414c255f3"
+    },
+    ".codex/commands/ci:profile.md": {
+      "artifactId": "command:profile",
+      "contentHash": "bbb8793d6e188749885a49aba1cbe43ffe315e9fafb0e3b11f860144b5f5842b"
+    },
+    ".agents/commands/ci:profile.md": {
+      "artifactId": "command:profile",
+      "contentHash": "095cf0833065f30399a7f62f8ec3b7b624c3a5cca2f53bf971e6f7a13c579f56"
+    },
+    ".claude/commands/ci:publish-brief.md": {
+      "artifactId": "command:publish-brief",
+      "contentHash": "6e5597855ccdf69826957aee0c757e156933dd928ac87bda2f77bee3f478a4ff"
+    },
+    ".codex/commands/ci:publish-brief.md": {
+      "artifactId": "command:publish-brief",
+      "contentHash": "3332e1f948f2f9b564854cf43a0dd6f6389e20c83cf8ee9d9d971fe290e9d807"
+    },
+    ".agents/commands/ci:publish-brief.md": {
+      "artifactId": "command:publish-brief",
+      "contentHash": "1133daebb6bc4f26657cbf86901c02214ef53ff035ad55bd26964013c1486256"
+    },
+    ".claude/commands/ci:run.md": {
+      "artifactId": "command:run",
+      "contentHash": "708b4f016776fb28fff0b317ab8045d494a0e9317449133d8d459944a614c259"
+    },
+    ".codex/commands/ci:run.md": {
+      "artifactId": "command:run",
+      "contentHash": "b81d9d920700a92a419661745cf6f92f2c0dadb1357d3c22116c32cf0e71b6b5"
+    },
+    ".agents/commands/ci:run.md": {
+      "artifactId": "command:run",
+      "contentHash": "d9b6d5609948ac27d058ebdec876936f6efd85382b72d733499b090379bcd4f9"
+    },
+    ".claude/commands/ci:schedule.md": {
+      "artifactId": "command:schedule",
+      "contentHash": "b50ddbdfc44844dda769a602e3445600c46b3a274d947fbc692b8a4a0968677c"
+    },
+    ".codex/commands/ci:schedule.md": {
+      "artifactId": "command:schedule",
+      "contentHash": "fe2eb3047913d99341d4ad3588b0908bfbb9f084420c4c31c128bcab894470bf"
+    },
+    ".agents/commands/ci:schedule.md": {
+      "artifactId": "command:schedule",
+      "contentHash": "9a4bf1f92805beff513aacf69045599fb84417d0db2436db12aa94722fee5105"
+    },
+    ".claude/commands/ci:setup.md": {
+      "artifactId": "command:setup",
+      "contentHash": "a835801c4b0cbf051c266780e3dfd0cfa49e35d94e093f57e41a5edb89ae1f59"
+    },
+    ".codex/commands/ci:setup.md": {
+      "artifactId": "command:setup",
+      "contentHash": "34151ce5374d088a3cd4fbd04051ef2f4efdaf36fd8c956a347aedd9a1a73af1"
+    },
+    ".agents/commands/ci:setup.md": {
+      "artifactId": "command:setup",
+      "contentHash": "369ef8200e60012eb178dbc9e4ba51bae8b2ccd77f93b49c226041948b79cd6a"
+    },
+    ".claude/commands/ci:status.md": {
+      "artifactId": "command:status",
+      "contentHash": "b54e2d7814c7225979ea511b5d9289336e27f22ede442ef3a08d619bcfc793de"
+    },
+    ".codex/commands/ci:status.md": {
+      "artifactId": "command:status",
+      "contentHash": "e61bad90f204167fcd343925fd48003f51b18ba8b5b1414bf2dcb513476ee22a"
+    },
+    ".agents/commands/ci:status.md": {
+      "artifactId": "command:status",
+      "contentHash": "a5af744cf894e2aa403d8685fd3fba416b5efbc7c5ed1af492540bb6ab80c988"
+    }
+  }
+}

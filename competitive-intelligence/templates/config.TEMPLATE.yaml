@@ -1,0 +1,63 @@
+# Competitive Intelligence — Config
+# Copied into {workspace_root}/config.yaml during /ci:setup.
+# Edit the copy in your workspace — this file is the default template.
+
+# ── Workspace ─────────────────────────────────────────────────────────────────
+#
+# workspace_root: path (relative to plugin root) where all pipeline data is stored.
+#   Set during /ci:setup. Change here if you move your workspace.
+
+workspace_root: workspace/competitor-analysis
+
+# ── Product ───────────────────────────────────────────────────────────────────
+#
+# product_name: used to name your product context file — {workspace_root}/{product_name}.md
+#   Set during /ci:setup. Change here if you rename your product.
+
+product_name: ""
+
+# ── Pipeline ──────────────────────────────────────────────────────────────────
+#
+# profile_analyzers: analyzers to run after the profile builder each pipeline run.
+#   Each name must match a file in agents/analyzers/ with status: active.
+#   Analyzers run in parallel — order doesn't matter.
+#   Remove an entry to disable; add one to enable. Run /ci:new to scaffold a new analyzer.
+
+profile_analyzers:
+  - swot
+
+# ── Distribution ──────────────────────────────────────────────────────────────
+#
+# A target is triggered when:
+#   (a) enabled: true, AND
+#   (b) the required MCP tool or API credential is available in the session
+#
+# When enabled but not connected, the brief will include a setup prompt.
+
+distribution:
+
+  # ── Slack ───────────────────────────────────────────────────────────────────
+  slack:
+    enabled: false
+    channel: "#competitive-intelligence"   # channel name or ID
+    format: summary                        # "summary" (TL;DR only) | "full" (complete brief)
+    # MCP tool:  mcp__slack__post_message
+    # Fallback:  set webhook_url below
+    webhook_url: ""
+
+  # ── Email ───────────────────────────────────────────────────────────────────
+  email:
+    enabled: false
+    to:
+      - you@yourcompany.com
+    subject_prefix: "[Competitive Brief]"
+    format: full                           # "summary" | "full"
+    # MCP tool:  mcp__email__send_email
+    # Fallback:  set SENDGRID_API_KEY env var
+
+  # ── Notion ──────────────────────────────────────────────────────────────────
+  notion:
+    enabled: false
+    parent_page_id: ""                     # Notion page ID — find it in the page URL
+    format: full                           # "summary" | "full"
+    # MCP tool:  mcp__notion (write access required)

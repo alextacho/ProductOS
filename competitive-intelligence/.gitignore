@@ -1,0 +1,8 @@
+workspace/
+.claude/
+.agents/
+.codex/
+.forge
+.DS_Store
+.forge/fixtures/
+AGENTS.md

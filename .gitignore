@@ -1,7 +1,0 @@
-workspace/
-dist/
-.DS_Store
-.forge/fixtures/
-.claude/commands/
-.claude/agents/
-.claude/skills/

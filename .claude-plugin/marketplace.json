@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ProductOS",
+  "version": "0.1.0",
+  "description": "AI-powered tools for product managers — each targeting a specific PM job.",
+  "owner": {
+    "name": "ProductOS"
+  },
+  "plugins": [
+    {
+      "name": "competitive-intelligence",
+      "description": "Track competitors, collect signals, detect change, and synthesize insight. Commands: setup, new, import, run, profile, market, status, schedule, publish-brief.",
+      "source": "./competitive-intelligence",
+      "category": "product-management"
+    }
+  ]
+}
