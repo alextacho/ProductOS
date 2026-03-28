@@ -1,9 +1,6 @@
 {
   "name": "ci",
   "description": "End to end system to analyze, synthesize and create automated competitive insights for a defined list of competitors.",
-  "version": "0.1.0",
-  "status": "active",
-  "skills": "skills/",
-  "agents": "agents/",
-  "commands": "commands/"
+  "version": "0.2.0",
+  "status": "draft"
 }
