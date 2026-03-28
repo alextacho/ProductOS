@@ -1,6 +1,6 @@
 ---
 name: ci:schedule
-description: Configure scheduled runs for any /ci: command. Add, remove, or list scheduled jobs. Uses Claude's built-in session scheduler — no OS setup required. Run without arguments to add a new schedule interactively.
+description: Configure scheduled runs for any /ci: command. Defaults to Desktop scheduled tasks (persistent, no expiry). Falls back to session-bound CronCreate if Desktop is unavailable. Run without arguments to set up interactively.
 type: command
 ---
 
@@ -8,21 +8,35 @@ type: command
 
 ## Role
 
-Add, remove, or list scheduled runs for any `/ci:` command using Claude's built-in cron scheduler. Jobs run automatically while Claude is open — no OS configuration, no API keys, no PATH issues.
+Create, list, or remove scheduled runs for any `/ci:` command. Desktop scheduled tasks are the default — they persist across restarts, have no expiry, and run automatically on your machine even when no Claude session is open. Session-bound scheduling (CronCreate) is available as a fallback for quick in-session use.
 
-**Important:** Jobs are session-bound — they disappear when Claude exits, and auto-expire after 7 days. Re-run `/ci:schedule` to restore them in a new session. The schedule config in `workspace/schedule.yaml` serves as the source of truth to restore from.
+---
+
+## Scheduling options
+
+| | Desktop task | Session-bound (`/loop`) |
+|---|---|---|
+| Persists across restarts | ✓ yes | ✗ no |
+| Requires open session | no | yes |
+| Expiry | none | 3 days |
+| Access to local files | yes | yes |
+| Min interval | 1 minute | 1 minute |
+
+**Use Desktop tasks** for weekly `/ci:run` and monthly `/ci:market` automation — the primary use case.
+
+**Use session-bound** only for quick in-session polling (e.g. "check back on this in 30 minutes").
 
 ---
 
 ## Arguments
 
 ```
-/ci:schedule                          Interactive — show current jobs, then prompt to add/remove
-/ci:schedule list                     Show active jobs only
-/ci:schedule add /ci:run daily 8:30am Schedule a command
-/ci:schedule remove /ci:run           Remove the scheduled job for a command
-/ci:schedule clear                    Remove all scheduled jobs
-/ci:schedule restore                  Re-register all jobs from workspace/schedule.yaml (use after starting a new session)
+/ci:schedule                          Interactive — show current schedule, prompt to add/remove
+/ci:schedule list                     Show active Desktop tasks and session-bound jobs
+/ci:schedule add /ci:run weekly Monday 9am    Schedule a Desktop task
+/ci:schedule remove /ci:run           Remove Desktop task (or session-bound job) for a command
+/ci:schedule clear                    Remove all managed tasks and jobs
+/ci:schedule session /ci:run daily 8:30am     Session-bound only — explicitly use CronCreate
 ```
 
 ---
@@ -31,9 +45,13 @@ Add, remove, or list scheduled runs for any `/ci:` command using Claude's built-
 
 ### Step 1 — Read current state
 
-Run `CronList` to get all active jobs in this session. Match each job back to a `/ci:` command by inspecting the prompt field.
+`{workspace_root}` and `{product_name}` are available from context (set in `AGENTS.md` by `/ci:setup`).
 
-Read `workspace/schedule.yaml` if it exists — this is the persisted config, used to show what's configured even if jobs aren't currently registered (e.g. after a session restart).
+Ask Claude to list all Desktop scheduled tasks by saying: "List my scheduled tasks."
+
+Also run `CronList` to get any active session-bound jobs.
+
+Read `{workspace_root}/schedule.yaml` if it exists — used to track what this plugin has registered.
 
 ---
 
@@ -44,21 +62,21 @@ Always show this first:
 ```
 Scheduled runs
 ──────────────────────────────────────────────────────────────────────
-  Command               Cadence                  Status    Expires
+  Command               Cadence                  Type       Status
   ────────────────────────────────────────────────────────────────────
-  /ci:run               Every day at 8:30am      active    2026-03-27
-  /ci:differentiation   Quarterly                inactive  (not registered this session)
-
-Jobs are session-bound — use /ci:schedule restore after starting a new Claude session.
+  /ci:run               Every Monday at 9:00am   Desktop    active
+  /ci:market            1st of each month 9am    Desktop    active
+  /ci:run               Every day at 8:30am      Session    active (expires in 2 days)
 ```
 
-**Status:**
-- `active` — job is registered and will fire in this session
-- `inactive` — in `schedule.yaml` but not registered this session (Claude was restarted)
+**Type column:**
+- `Desktop` — persistent task managed by the Desktop app. No expiry.
+- `Session` — session-bound CronCreate job. Expires after 3 days. Disappears on restart.
 
-If nothing is scheduled and no `schedule.yaml` exists:
+If nothing is scheduled:
 ```
 No scheduled runs configured.
+Run /ci:schedule to set one up.
 ```
 
 ---
@@ -67,21 +85,29 @@ No scheduled runs configured.
 
 **If `list`:** stop after Step 2.
 
-**If `restore`:** read `workspace/schedule.yaml`. For each enabled entry not currently active in CronList, call `CronCreate` to re-register it. Report what was restored. Stop.
-
 **If `add /ci:[name] [cadence]`:** skip to Step 5 with command and cadence pre-filled.
 
-**If `remove /ci:[name]`:** find the matching job ID from CronList, call `CronDelete`, update `workspace/schedule.yaml` to set `enabled: false`. Confirm. Stop.
+**If `remove /ci:[name]`:**
+- Find matching Desktop task and ask Claude to delete it: "Delete the [name] scheduled task."
+- Also find matching session-bound job from CronList and call `CronDelete` if present.
+- Update `{workspace_root}/schedule.yaml` to mark the entry removed.
+- Confirm. Stop.
 
-**If `clear`:** call `CronDelete` for all managed jobs, clear `workspace/schedule.yaml`. Confirm. Stop.
+**If `clear`:**
+- Ask Claude to "Delete all competitive intelligence scheduled tasks" (Desktop).
+- Call `CronDelete` for all session-bound CI jobs.
+- Clear `{workspace_root}/schedule.yaml`.
+- Confirm. Stop.
+
+**If `session /ci:[name] [cadence]`:** skip to Step 6 (session-bound path, skipping Desktop).
 
 **If no arguments (interactive):** show the schedule (Step 2), then ask:
 
 ```
 What would you like to do?
-  [1] Add or update a scheduled run
-  [2] Remove a scheduled run
-  [3] Restore all from saved config
+  [1] Add a scheduled run (Desktop — persistent, recommended)
+  [2] Add a quick session run (session-bound, expires in 3 days)
+  [3] Remove a scheduled run
   [4] Clear all
   [5] Keep as-is
 ```
@@ -98,10 +124,8 @@ Ask which command to schedule:
 Which /ci: command would you like to schedule?
 
   Examples:
-    /ci:run              Main pipeline — extractors, delta detection, brief (daily or weekly)
-    /ci:market           Market synthesis — positioning map, Porter's forces (monthly)
-    /ci:blue-ocean       Blue ocean analysis — uncontested space map (quarterly)
-    /ci:differentiation  Differentiation strategy — JTBD gaps and positioning rec (quarterly)
+    /ci:run              Main pipeline — extractors, delta detection, brief (weekly)
+    /ci:market           Market synthesis — positioning map, JTBD gaps (monthly)
 
   Any /ci: command can be scheduled. Type the command name (with or without /ci:):
 ```
@@ -109,101 +133,123 @@ Which /ci: command would you like to schedule?
 Then ask when:
 
 ```
-When should it run? Some examples:
+When should it run?
 
-  "every day at 8:30am"          → daily
   "every Monday at 9am"          → weekly
-  "every Tuesday and Friday"     → twice a week
+  "every day at 8:30am"          → daily
   "1st of every month at 9am"    → monthly
   "quarterly"                    → Jan/Apr/Jul/Oct 1st
   "weekdays at 7am"              → Mon–Fri only
-  "in 5 minutes"                 → one-time test (fires once, then deletes itself)
 ```
 
 ---
 
-### Step 5 — Convert cadence to cron expression
+### Step 5 — Create Desktop scheduled task (default path)
 
-Convert the natural language cadence to a 5-field cron expression (local time — no timezone conversion needed).
+Ask Claude to create a Desktop scheduled task using natural language:
 
-**Avoid :00 and :30 minute marks** unless the user names them exactly — nudge a few minutes to avoid thundering-herd on the API:
-- "every day at 8:30am" → `30 8 * * *` (user said exactly 8:30 — use it)
-- "every morning around 9" → `57 8 * * *` or `3 9 * * *`
+> "Create a scheduled task called 'ci-[command-name]' with the prompt `/ci:[name]` to run [cadence]. Use the current project folder."
+
+For example:
+> "Create a scheduled task called 'ci-run' with the prompt `/ci:run` to run every Monday at 9am. Use the current project folder."
+
+If Claude confirms the task was created:
+- Write or update `{workspace_root}/schedule.yaml` (see Step 7 format).
+- Go to Step 8.
+
+**If Desktop task creation fails** (e.g. running in CLI without Desktop app, or app not available):
+
+Tell the user:
+> "Desktop task creation requires the Claude Desktop app. Falling back to session-bound scheduling — this job will expire in 3 days and requires Claude to be open."
+
+Then follow Step 6 (session-bound path).
+
+---
+
+### Step 6 — Session-bound fallback (CronCreate)
+
+Convert the cadence to a 5-field cron expression.
+
+**Avoid :00 and :30 minute marks** unless the user named them exactly — nudge a few minutes off to avoid thundering-herd on the API:
+- "every Monday at 9am" → `0 9 * * 1` (user said exactly 9am — use it)
 - "daily" with no time given → pick an off-minute like `27 8 * * *`
-
-**Special case — "in N minutes":** calculate the exact fire time from `date`, pin day and month (`MM HH DD Mon *`), set `recurring: false`. Tell the user:
-> "One-time test — fires at [time], then deletes itself. Run `/ci:schedule restore` won't include this; it's not saved to `schedule.yaml`."
 
 **Standard cadences:**
 
 | Input | Cron |
 |-------|------|
-| every day at 8:30am | `30 8 * * *` |
 | every Monday at 9am | `0 9 * * 1` |
-| every Tuesday and Friday at 8am | `0 8 * * 2,5` |
+| every day at 8:30am | `30 8 * * *` |
 | weekdays at 7am | `0 7 * * 1-5` |
 | 1st of every month at 9am | `0 9 1 * *` |
 | quarterly | `0 9 1 1,4,7,10 *` |
 
-If it doesn't map cleanly, show the closest approximation and confirm:
-> "Every 2 weeks isn't exact in cron — I'll schedule it on the 1st and 15th of each month. OK?"
-
----
-
-### Step 6 — Register with CronCreate
-
 Call `CronCreate` with:
-- `cron`: the expression from Step 5
+- `cron`: the expression
 - `prompt`: `/ci:[name]`
-- `recurring`: `true` (default) — or `false` for one-time test runs
+- `recurring`: `true`
 
 Note the returned job ID.
 
-Remind the user about the 7-day auto-expiry:
-> "This job will auto-expire in 7 days. Re-run `/ci:schedule restore` or `/ci:schedule add` before then to keep it running."
+Warn the user:
+> "Session-bound job created. **Expires in 3 days** and requires Claude Code to be open. To set up a persistent schedule that runs automatically, open the Claude Desktop app and run `/ci:schedule add /ci:[name] [cadence]`."
+
+Write or update `{workspace_root}/schedule.yaml` marking type as `session`.
 
 ---
 
 ### Step 7 — Write schedule config
 
-Write or update `workspace/schedule.yaml`. One entry per scheduled command. Skip one-time test entries — those don't belong in the persistent config.
+Write or update `{workspace_root}/schedule.yaml`:
 
 ```yaml
 # Competitive analysis schedule config
-# Source of truth for restoring jobs after a session restart.
-# Run /ci:schedule restore to re-register all enabled entries.
-# Any /ci: command can be scheduled.
+# Managed by /ci:schedule. Edit via /ci:schedule commands, not directly.
 
 schedules:
   run:
+    type: desktop          # desktop | session
     enabled: true
-    cron: "30 8 * * *"
-    human_readable: "Every day at 8:30am"
+    cadence: "Every Monday at 9:00am"
 
   market:
+    type: desktop
     enabled: true
-    cron: "0 9 1 * *"
-    human_readable: "1st of each month at 9:00am"
+    cadence: "1st of each month at 9:00am"
+```
 
-  differentiation:
+For session-bound entries, include the `cron` expression (useful for re-creating later):
+
+```yaml
+  run:
+    type: session
     enabled: true
-    cron: "0 9 1 1,4,7,10 *"
-    human_readable: "Quarterly — Jan/Apr/Jul/Oct 1st at 9:00am"
+    cadence: "Every day at 8:30am"
+    cron: "30 8 * * *"
+    expires: "3 days from creation"
 ```
 
 ---
 
-### Step 8 — Confirm
+### Step 8 — Confirm and show permission note
 
-Show the updated schedule table (Step 2 format) with status and expiry dates.
+Show the updated schedule table (Step 2 format).
+
+For **Desktop tasks**, add this note the first time:
+
+> "Desktop task created. To avoid permission prompts during automated runs:
+> 1. Open the Claude Desktop app → Schedule page
+> 2. Find the task and click **Run now** to do a test run
+> 3. When prompted for permissions, select **Always allow**
+>
+> Future runs will be fully automated."
 
 ---
 
 ## Notes
 
-- **Session-bound:** jobs only fire while Claude is open and idle. They disappear on exit.
-- **7-day expiry:** recurring jobs auto-delete after 7 days. Re-register with `/ci:schedule restore`.
-- **Restore after restart:** run `/ci:schedule restore` at the start of a new session to re-register all saved schedules.
-- **`workspace/schedule.yaml` is gitignored** — schedule config is machine-specific.
-- **One-time tests:** use `"in 5 minutes"` as the cadence. These are not saved to `schedule.yaml`.
+- **Desktop tasks have no expiry** — they persist until you delete them from the Desktop app or via `/ci:schedule remove`.
+- **Session-bound jobs expire in 3 days** — use these only for temporary in-session polling.
+- **`{workspace_root}/schedule.yaml` is gitignored** — schedule config is machine-specific.
+- **Desktop task prompts live at** `~/.claude/scheduled-tasks/<task-name>/SKILL.md` — you can edit the prompt directly there; schedule and folder are managed via the Desktop app.
 - **To run immediately:** invoke the command directly (`/ci:run`, `/ci:market`, etc.).

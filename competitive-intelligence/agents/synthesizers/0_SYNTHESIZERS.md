@@ -6,7 +6,7 @@ To add a new synthesizer: run `/ci:new` and choose "Market synthesizer."
 
 | Synthesizer | Owns | Frameworks | Command | Stale after | Status |
 |-------------|------|------------|---------|-------------|--------|
-| [market-synthesizer.md](./market-synthesizer.md) | `workspace/syntheses/market-[date].md` | competitive positioning map, jobs-to-be-done, value curve, differentiation mapping | `/ci:market` | 30 days | active |
+| [market-synthesizer.md](./market-synthesizer.md) | `{workspace_root}/syntheses/market-[date].md` | competitive positioning map, jobs-to-be-done, value curve, differentiation mapping | `/ci:market` | 30 days | active |
 
 ---
 

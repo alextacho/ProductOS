@@ -90,7 +90,7 @@ Always rewrite this section in full — it is inherently run-scoped.
 
 ## Output Schema
 
-Update `workspace/profiles/[competitor_name].md`:
+Update `{workspace_root}/profiles/[competitor_name].md`:
 
 - **`## Current State`** — always rewrite in full
 - **`## Direction`** — always rewrite in full

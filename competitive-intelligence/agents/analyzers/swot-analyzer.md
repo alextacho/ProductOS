@@ -100,7 +100,7 @@ Four pointed assessments written as a PM would say them after reading the full s
 
 ## Output Schema
 
-Write to `## Analysis — SWOT` in `workspace/profiles/[competitor_name].md`. Apply merge rules from Steps 2 and 3.
+Write to `## Analysis — SWOT` in `{workspace_root}/profiles/[competitor_name].md`. Apply merge rules from Steps 2 and 3.
 
 ```markdown
 ## Analysis — SWOT

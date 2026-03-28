@@ -16,7 +16,7 @@ Run the profile-synthesizer for a single competitor using their most recent snap
 
 | Argument | Values | Default | Notes |
 |----------|--------|---------|-------|
-| `competitor_name` | competitor name | required | Must match a name in `workspace/competitors.yaml` |
+| `competitor_name` | competitor name | required | Must match a name in `{workspace_root}/competitors.yaml` |
 
 **Parsing rules:**
 - A bare name is used as `competitor_name`: `/ci:profile Aha.io`
@@ -28,14 +28,16 @@ Run the profile-synthesizer for a single competitor using their most recent snap
 
 ### Step 1 — Resolve competitor
 
+`{workspace_root}` and `{product_name}` are available from context (set in `AGENTS.md` by `/ci:setup`).
+
 If no argument was given, ask the user to specify a competitor name.
 
-Read `workspace/competitors.yaml` to validate the name exists. If not found:
-> "No competitor named '[name]' found in workspace/competitors.yaml. Run /ci:status to see tracked competitors."
+Read `{workspace_root}/competitors.yaml` to validate the name exists. If not found:
+> "No competitor named '[name]' found in `{workspace_root}/competitors.yaml`. Run /ci:status to see tracked competitors."
 
 ### Step 2 — Find most recent snapshot
 
-Look in `workspace/snapshots/[competitor-name]/` for `.md` files. Sort by filename date descending — the most recent is the target snapshot.
+Look in `{workspace_root}/snapshots/[competitor-name]/` for `.md` files. Sort by filename date descending — the most recent is the target snapshot.
 
 If no snapshots exist:
 > "No snapshots found for [name]. Run /ci:run [name] first to generate a snapshot."
@@ -48,10 +50,10 @@ Confirm what will be used:
 ### Step 3 — Read inputs
 
 Read in parallel:
-- New snapshot: full content of `workspace/snapshots/[name]/[latest-date].md`
-- Previous snapshot: full content of `workspace/snapshots/[name]/[second-latest].md` (or empty string if none)
-- Current profile: full content of `workspace/profiles/[name].md` (or empty string if none)
-- Our product context: `{workspace_root}/{product_name}.md` (or empty string if missing; resolve `workspace_root` and `product_name` from `workspace/competitor-analysis/config.yaml`)
+- New snapshot: full content of `{workspace_root}/snapshots/[name]/[latest-date].md`
+- Previous snapshot: full content of `{workspace_root}/snapshots/[name]/[second-latest].md` (or empty string if none)
+- Current profile: full content of `{workspace_root}/profiles/[name].md` (or empty string if none)
+- Our product context: `{workspace_root}/{product_name}.md` (or empty string if missing)
 
 ### Step 4 — Run profile builder
 
@@ -86,8 +88,8 @@ Append a row to the `## Run History` table in the profile:
 Print a summary:
 
 ```
-Profile updated: workspace/profiles/[name].md
-  Snapshot used: workspace/snapshots/[name]/[date].md
+Profile updated: {workspace_root}/profiles/[name].md
+  Snapshot used: {workspace_root}/snapshots/[name]/[date].md
   Sections updated: Current State, Direction, [list of analyzer sections run]
 
 [2–3 sentence read of the most important finding]

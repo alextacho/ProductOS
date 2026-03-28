@@ -15,14 +15,16 @@ Read the pipeline's index files and config, then render a single-screen status d
 
 ### Step 1 — Read everything in parallel
 
+`{workspace_root}` and `{product_name}` are available from context (set in `AGENTS.md` by `/ci:setup`).
+
 Read all of the following:
 - `agents/extractors/0_EXTRACTORS.md`
 - `agents/synthesizers/0_SYNTHESIZERS.md` — market synthesizer index
-- `workspace/schedule.yaml` (if exists)
-- `context/distribution.yaml`
-- `workspace/competitors.yaml` (if exists)
-- `workspace/briefs/` — find the most recent file by date
-- `workspace/syntheses/` — find the most recent `market-*.md` and `blue-ocean-*.md`
+- `{workspace_root}/schedule.yaml` (if exists)
+- `{workspace_root}/config.yaml` — read the `distribution:` block
+- `{workspace_root}/competitors.yaml` (if exists)
+- `{workspace_root}/briefs/` — find the most recent file by date
+- `{workspace_root}/syntheses/` — find the most recent `market-*.md` and `blue-ocean-*.md`
 
 ### Step 2 — Render the dashboard
 
@@ -67,7 +69,7 @@ Synthesizers
 
 #### Schedule
 
-If `workspace/schedule.yaml` exists:
+If `{workspace_root}/schedule.yaml` exists:
 ```
 Schedule
 ──────────────────────────────────────────────────────────
@@ -76,7 +78,7 @@ Schedule
   /ci:blue-ocean   Quarterly (Jan/Apr/Jul/Oct)    off
 ```
 
-If `workspace/schedule.yaml` does not exist:
+If `{workspace_root}/schedule.yaml` does not exist:
 ```
 Schedule
 ──────────────────────────────────────────────────────────
@@ -87,7 +89,7 @@ Schedule
 
 #### Distribution
 
-Read `context/distribution.yaml`. For each target:
+Read the `distribution:` block from `{workspace_root}/config.yaml`. For each target:
 ```
 Distribution
 ──────────────────────────────────────────────────────────
@@ -113,7 +115,7 @@ Workspace
 
 Staleness thresholds: read the `Stale after` column from `agents/synthesizers/0_SYNTHESIZERS.md` for each active synthesizer. Use each synthesizer's own threshold — do not hardcode. If a file doesn't exist yet: show `never run`.
 
-If `workspace/competitors.yaml` does not exist: show `No competitors configured — run /ci:setup`.
+If `{workspace_root}/competitors.yaml` does not exist: show `No competitors configured — run /ci:setup`.
 
 ---
 

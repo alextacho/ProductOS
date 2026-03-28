@@ -44,7 +44,7 @@ FOR EACH DUE COMPETITOR — in parallel:
     ↓
 COLLECT ALL RESULTS
     ↓
-RUN BRIEF COMPOSER (once) → write to workspace/briefs/
+RUN BRIEF COMPOSER (once) → write to {workspace_root}/briefs/
     ↓
 RUN BRIEF DISTRIBUTOR (once) → dispatch to configured targets
     ↓
@@ -59,9 +59,7 @@ RETURN BRIEF TO USER
 
 ### Step 1 — Read the registry
 
-**Resolve workspace root and product name:** Read `workspace/competitor-analysis/config.yaml` for `workspace_root` and `product_name`. If the file is missing or either value is not set, use defaults: `workspace_root = workspace/competitor-analysis`, `product_name = ""`.
-
-Store these as `{workspace_root}` and `{product_name}` and substitute them in every path reference for the rest of this run.
+`{workspace_root}` and `{product_name}` are available from context (set in `AGENTS.md` by `/ci:setup`). Use them in every path reference for the rest of this run.
 
 Read `{workspace_root}/competitors.yaml`. Load the full list of competitors: name, website, tier, last_updated.
 
@@ -95,11 +93,11 @@ For each competitor in `due_competitors`:
 
 **3a — Resolve previous snapshot**
 
-Look in `workspace/snapshots/[competitor-name]/` for existing snapshot files. The most recent file (by filename date) is the `previous_snapshot`. If none exist, `previous_snapshot` is null — this is the first run.
+Look in `{workspace_root}/snapshots/[competitor-name]/` for existing snapshot files. The most recent file (by filename date) is the `previous_snapshot`. If none exist, `previous_snapshot` is null — this is the first run.
 
 **3b — Create the new snapshot file**
 
-Create `workspace/snapshots/[competitor-name]/[run_date].md` with this header:
+Create `{workspace_root}/snapshots/[competitor-name]/[run_date].md` with this header:
 
 ```markdown
 # [Competitor Name] — [run_date]
@@ -170,7 +168,7 @@ Spawn one profile-builder per competitor. These can run in parallel across compe
 - `competitor_name`: name
 - `snapshot`: full content of the new snapshot (after extractors and delta detector ran)
 - `previous_snapshot`: full content of the previous snapshot (or empty string if first run)
-- `current_profile`: full content of `workspace/profiles/[name].md` if it exists; otherwise empty string
+- `current_profile`: full content of `{workspace_root}/profiles/[name].md` if it exists; otherwise empty string
 
 The profile builder writes `## Current State` and `## Direction` to the profile. All other profile sections are preserved.
 
@@ -208,14 +206,15 @@ After all competitor-synthesizers complete, run the brief-composer once.
 - `competitors_skipped`: names of all competitors in `skipped_competitors`
 - `fetch_failures`: any failures collected in Step 3
 
-The brief-composer saves the output to `workspace/briefs/[run_date].md` and returns it.
+The brief-composer saves the output to `{workspace_root}/briefs/[run_date].md` and returns it.
 
 ### Step 6.5 — Distribute brief
 
 After the brief-composer saves the brief file, run the brief-distributor skill.
 
 **Inputs:**
-- `brief_path`: `workspace/briefs/[run_date].md`
+- `workspace_root`: the resolved `{workspace_root}` value from Step 1
+- `brief_path`: `{workspace_root}/briefs/[run_date].md`
 - `run_date`: today's date
 - `brief_summary`: the TL;DR section from the brief (first ~150 words)
 - `brief_full`: the complete brief content
@@ -235,7 +234,7 @@ After all runs complete successfully:
 - `changelog_url` — if the changelog-extractor discovered a URL this run (and the field was previously null), write it. Do not overwrite a previously stored URL unless the extractor explicitly found a better one.
 
 **Profile run history:**
-Append a row to the `## Run History` table in `workspace/profiles/[name].md` for each competitor that ran:
+Append a row to the `## Run History` table in `{workspace_root}/profiles/[name].md` for each competitor that ran:
 
 ```
 | [run_date] | [snapshots/[name]/[run_date].md](../snapshots/[name]/[run_date].md) | [1-sentence summary of the most significant delta or finding] |
@@ -245,9 +244,9 @@ Append a row to the `## Run History` table in `workspace/profiles/[name].md` for
 
 Before returning, read `agents/synthesizers/0_SYNTHESIZERS.md`. For each row with `status: active`:
 
-1. Extract the `Owns` file pattern (e.g., `workspace/syntheses/blue-ocean-[date].md`) and the `Stale after` value (e.g., `90 days`)
+1. Extract the `Owns` file pattern (e.g., `{workspace_root}/syntheses/blue-ocean-[date].md`) and the `Stale after` value (e.g., `90 days`)
 2. Derive the glob pattern by replacing `[date]` with `*`
-3. Find the most recent file in `workspace/syntheses/` matching that pattern
+3. Find the most recent file in `{workspace_root}/syntheses/` matching that pattern
 4. If the most recent file is older than the `Stale after` threshold, or no file exists, append a nudge to the brief:
 
 ```
@@ -260,7 +259,7 @@ This step is index-driven — it automatically covers any synthesizer a user add
 
 ### Step 9 — Return output
 
-Return the brief to the user. The brief file is also saved at `workspace/briefs/[run_date].md`.
+Return the brief to the user. The brief file is also saved at `{workspace_root}/briefs/[run_date].md`.
 
 If `run_mode` is `deep-dive`, return the full deep-dive content rather than the brief.
 
@@ -274,7 +273,7 @@ If `run_mode` is `deep-dive`, return the full deep-dive content rather than the 
 | `adjacent` | Monthly | Every 30 days |
 | `aspirational` | Quarterly | Every 90 days; usually just news-extractor |
 
-The orchestrator does not manage a schedule — it determines what's due at the time it runs. Scheduling is configured via `/ci:schedule`, which registers cron jobs in Claude Code. Schedule state is stored in `workspace/schedule.yaml`.
+The orchestrator does not manage a schedule — it determines what's due at the time it runs. Scheduling is configured via `/ci:schedule`, which registers cron jobs in Claude Code. Schedule state is stored in `{workspace_root}/schedule.yaml`.
 
 ---
 
@@ -285,7 +284,7 @@ The orchestrator does not manage a schedule — it determines what's due at the 
 - Domain-specific terms ("product management", "SaaS", "pricing tier names")
 - Any logic that treats one competitor differently from another
 
-If a competitor needs special handling (e.g., a non-standard about page URL), that goes in `workspace/competitors.yaml` as a config field (e.g., `about_url_override`), not here.
+If a competitor needs special handling (e.g., a non-standard about page URL), that goes in `{workspace_root}/competitors.yaml` as a config field (e.g., `about_url_override`), not here.
 
 ---
 
@@ -293,7 +292,7 @@ If a competitor needs special handling (e.g., a non-standard about page URL), th
 
 | Error | Behavior |
 |-------|----------|
-| `workspace/competitors.yaml` missing | Abort with: "Competitor list not found at workspace/competitors.yaml. Run /ci:setup first." |
+| `{workspace_root}/competitors.yaml` missing | Abort with: "Competitor list not found at `{workspace_root}/competitors.yaml`. Run /ci:setup first." |
 | No competitors due | Produce a brief: "Nothing was due this cycle. Next direct-tier run in X days." |
 | All extractors failed for a competitor | Mark all sections `[unavailable]` in snapshot, note in brief, continue pipeline |
 | Brief-composer fails | Return raw delta list and synthesis as fallback; note brief formatting failed |
@@ -302,12 +301,9 @@ If a competitor needs special handling (e.g., a non-standard about page URL), th
 
 ## File Paths (relative to plugin root)
 
-`{workspace_root}` is resolved from `workspace/competitor-analysis/config.yaml` at Step 1. Default: `workspace/competitor-analysis`.
+`{workspace_root}` and `{product_name}` come from context — written into `AGENTS.md` by `/ci:setup`. All paths below are relative to the plugin root.
 
-The canonical bootstrap location is always:
-- `workspace/competitor-analysis/config.yaml` — contains `workspace_root` and `product_name`; written by `/ci:setup`
-
-Everything else lives under `{workspace_root}`:
+Everything lives under `{workspace_root}`:
 
 ```
 agents/extractors/0_EXTRACTORS.md               — extractor index (check status: active before spawning)

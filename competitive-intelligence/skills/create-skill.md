@@ -1,10 +1,13 @@
 ---
 name: create-skill
-description: Guided workflow for generating a new extractor or synthesizer that correctly slots into the competitive analysis pipeline. Produces a skill file, an index row, and orchestrator wiring instructions.
+description: DEPRECATED — use /ci:new instead. This file has stale paths and is no longer maintained.
 layer: system
+status: deprecated
 ---
 
 # Create Skill
+
+> **Deprecated.** Use `/ci:new` — it supersedes this skill with correct paths, template references, and profile-builder integration. This file is kept for reference only.
 
 ## Role
 

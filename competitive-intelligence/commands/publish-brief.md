@@ -8,7 +8,7 @@ type: command
 
 ## Role
 
-Take a saved brief from `workspace/briefs/` and dispatch it to one or more distribution channels. This command lets you publish on demand, independently of `/ci:run`. It does not re-run analysis — it only sends what's already written.
+Take a saved brief from `{workspace_root}/briefs/` and dispatch it to one or more distribution channels. This command lets you publish on demand, independently of `/ci:run`. It does not re-run analysis — it only sends what's already written.
 
 ---
 
@@ -17,13 +17,13 @@ Take a saved brief from `workspace/briefs/` and dispatch it to one or more distr
 | Argument | Values | Default | Notes |
 |----------|--------|---------|-------|
 | `--brief <date>` | `YYYY-MM-DD` | most recent brief | Publish a specific brief by date |
-| `--all` | flag | off | Publish all briefs in `workspace/briefs/` |
+| `--all` | flag | off | Publish all briefs in `{workspace_root}/briefs/` |
 | `--yes` | flag | off | Skip channel-select and confirmation prompts; publish to all ready channels automatically |
 
 **Parsing rules:**
 - No arguments → publish the most recent brief
-- `--brief 2026-03-19` → publish `workspace/briefs/2026-03-19.md`
-- `--all` → publish every `.md` file in `workspace/briefs/`, oldest first
+- `--brief 2026-03-19` → publish `{workspace_root}/briefs/2026-03-19.md`
+- `--all` → publish every `.md` file in `{workspace_root}/briefs/`, oldest first
 - `--all` and `--brief` together → `--all` takes precedence
 - `--yes` → non-interactive mode; skip Steps 4 and 5, publish to all `ready` channels
 
@@ -33,13 +33,15 @@ Take a saved brief from `workspace/briefs/` and dispatch it to one or more distr
 
 ### Step 1 — Resolve target brief(s)
 
-List all `.md` files in `workspace/briefs/`. Sort by filename (date) descending.
+`{workspace_root}` and `{product_name}` are available from context (set in `AGENTS.md` by `/ci:setup`).
+
+List all `.md` files in `{workspace_root}/briefs/`. Sort by filename (date) descending.
 
 **If no briefs exist:** abort with:
-> No briefs found in `workspace/briefs/`. Run `/ci:run` first to generate one.
+> No briefs found in `{workspace_root}/briefs/`. Run `/ci:run` first to generate one.
 
-**If `--brief <date>`:** find `workspace/briefs/<date>.md`. If not found, abort with:
-> Brief `workspace/briefs/<date>.md` not found. Available briefs:
+**If `--brief <date>`:** find `{workspace_root}/briefs/<date>.md`. If not found, abort with:
+> Brief `{workspace_root}/briefs/<date>.md` not found. Available briefs:
 > [list filenames, most recent first]
 
 **If `--all`:** collect all brief files, sorted oldest first (so they land in channels in chronological order).
@@ -50,7 +52,7 @@ List all `.md` files in `workspace/briefs/`. Sort by filename (date) descending.
 
 ### Step 2 — Read distribution config
 
-Read `context/distribution.yaml`.
+Read `{workspace_root}/config.yaml` and extract the `distribution:` block.
 
 For each target, determine its state:
 
@@ -71,7 +73,7 @@ If no targets are `ready`: abort with:
 > Configured but not connected: [list targets with their missing requirement]
 > Disabled: [list disabled targets]
 >
-> Set up a channel in `context/distribution.yaml` or connect the required MCP tool, then re-run `/ci:publish-brief`.
+> Set up a channel in `{workspace_root}/config.yaml` (under `distribution:`) or connect the required MCP tool, then re-run `/ci:publish-brief`.
 
 ---
 
@@ -82,7 +84,7 @@ Print a confirmation preview before asking anything:
 ```
 Publishing:
 ──────────────────────────────────────────────────────────
-  Brief(s):   workspace/briefs/2026-03-19.md
+  Brief(s):   {workspace_root}/briefs/2026-03-19.md
   Format:     full
 
 Available channels:
@@ -130,6 +132,7 @@ For each brief (in order if `--all`):
 2. Extract the TL;DR / summary section (first `## TL;DR` or `## Summary` block, up to ~150 words) as `brief_summary`
 3. Use full file content as `brief_full`
 4. Invoke `brief-distributor` with:
+   - `workspace_root`: the resolved `{workspace_root}` value
    - `brief_path`: path to the brief file
    - `run_date`: date from the filename
    - `brief_summary`: extracted summary

@@ -106,7 +106,7 @@ For each change:
 | `## Strategic Signals` — recent funding | `funding` |
 | `## Strategic Signals` — recent news | `news` |
 
-2. **Look up the weight** by reading `context/weights.md` and matching the signal type + nature of the change.
+2. **Look up the weight** by reading `context/signal-weights.md` and matching the signal type + nature of the change.
 
 3. **Assign change type** from Step 2 (`changed`, `new`, `removed`).
 

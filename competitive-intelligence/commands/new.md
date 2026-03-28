@@ -49,7 +49,7 @@ Ask in sequence (one or two questions at a time — don't dump a form):
    Remind the user: direct = weekly, adjacent = monthly, aspirational = quarterly
 
 5. **Any per-competitor config it needs?**
-   e.g., "a custom G2 URL per competitor" — if yes, this becomes a field in `workspace/competitors.yaml`
+   e.g., "a custom G2 URL per competitor" — if yes, this becomes a field in `{workspace_root}/competitors.yaml`
 
 ### If profile analyzer:
 
@@ -70,7 +70,7 @@ All user-created profile analyzers run per-competitor after the profile builder.
 4. **What does the output section look like?**
    Draft the structure of `## Analysis — [Name]`. Keep it parallel to how SWOT structures its output — named subsections, source annotations, merge rules.
 
-5. **Should it be added to `workspace/config.yaml` immediately?**
+5. **Should it be added to `{workspace_root}/config.yaml` immediately?**
    If yes, add it after scaffolding. If no, leave it out and tell the user to add it when ready.
 
 ---
@@ -83,10 +83,10 @@ All user-created synthesizers are Stage 2 — they run on-demand across all comp
    e.g., "Jobs-to-be-done", "Ansoff matrix", "sales motion inference", "ICP derivation from positioning"
 
 2. **What section does it write?**
-   It writes to `workspace/syntheses/[name]-[date].md` — what's the filename prefix?
+   It writes to `{workspace_root}/syntheses/[name]-[date].md` — what's the filename prefix?
 
 3. **What inputs does it need?**
-   Which profile sections or files does it read? (e.g., `## SWOT`, `## Our Read`, `workspace/ourproduct.md`)
+   Which profile sections or files does it read? (e.g., `## SWOT`, `## Our Read`, `{workspace_root}/{product_name}.md`)
 
 4. **How often should it run?** (used to set the staleness reminder in briefs)
    Suggest based on the framework: strategic frameworks (Blue Ocean, differentiation) → 90 days; tactical/positioning frameworks → 30 days. Confirm with the user or accept their answer as-is.
@@ -97,13 +97,13 @@ All user-created synthesizers are Stage 2 — they run on-demand across all comp
 ### If command:
 
 1. **What does it do in one sentence?**
-   e.g., "Runs GTM synthesis across all profiles and writes to workspace/syntheses/"
+   e.g., "Runs GTM synthesis across all profiles and writes to {workspace_root}/syntheses/"
 
 2. **What does it read?**
    Profile sections? Synthesis files? Workspace files? Web data?
 
 3. **What does it produce?**
-   A synthesis file in `workspace/syntheses/`? Updates to profiles? Just returns output to the user?
+   A synthesis file in `{workspace_root}/syntheses/`? Updates to profiles? Just returns output to the user?
 
 4. **Should it run on a schedule?**
    If yes, suggest running `/ci:schedule` after creation to register it. Note the suggested cadence.
@@ -117,7 +117,7 @@ All user-created synthesizers are Stage 2 — they run on-demand across all comp
 
 ### Extractor
 
-Create `agents/extractors/[name]-extractor.md` using the template at `skills/extractors/TEMPLATE.md`.
+Create `agents/extractors/[name]-extractor.md` using an existing extractor (e.g., `agents/extractors/pricing-extractor.md`) as a structural reference.
 
 Fill in everything derivable from the user's answers:
 - `name`, `description`, `profile_section`, `sources`, `tier_scope` in the frontmatter
@@ -149,7 +149,7 @@ Fill in:
 
 Create `agents/synthesizers/[name]-synthesizer.md`.
 
-Use the structure from an existing market synthesizer as a reference (read `agents/synthesizers/market-synthesizer.md` or `agents/synthesizers/market-synthesizer.md`).
+Use the structure from `agents/synthesizers/market-synthesizer.md` as a reference.
 
 Fill in:
 - Frontmatter: `name`, `description`, `stage: 2`, `owns`, `frameworks`, `inputs`
@@ -176,22 +176,22 @@ Fill in:
 
 After scaffolding an extractor, check whether the profile-synthesizer will leverage the new section.
 
-Read `skills/profile-synthesizer.md` Step 1. Look for the new extractor's `profile_section` heading in the section table (e.g., `## Pricing`).
+Read `skills/profile-builder.md` Step 1. Look for the new extractor's `profile_section` heading in the section table (e.g., `## Pricing`).
 
 **If the section is already listed:** confirm to the user:
-> "Profile-synthesizer already references `[section]` — no changes needed there."
+> "Profile-builder already references `[section]` — no changes needed there."
 
 **If the section is NOT listed:** tell the user:
-> "`skills/profile-synthesizer.md` Step 1 does not reference `[section]`. The synthesizer will read it as raw text but won't know what to infer from it. Add a row to the Step 1 table describing what this section contributes to SWOT and Our Read."
+> "`skills/profile-builder.md` Step 1 does not reference `[section]`. The builder will read it as raw text but won't know what to infer from it. Add a row to the Step 1 table describing what this section contributes to Current State."
 
-Then open `skills/profile-synthesizer.md` and add a row to the Step 1 table:
+Then open `skills/profile-builder.md` and add a row to the Step 1 table:
 
 ```markdown
 | `## [Section]` | [What this section tells you — 1 sentence] |
 ```
 
 Use the extractor's `description` and `profile_section` to write the row. If you can't determine what to infer, write a `TODO:` placeholder and tell the user:
-> "Added a TODO row for `## [Section]` in profile-synthesizer Step 1 — fill in what to infer from this data before activating the extractor."
+> "Added a TODO row for `## [Section]` in profile-builder Step 1 — fill in what to infer from this data before activating the extractor."
 
 ---
 
@@ -207,10 +207,10 @@ Add a row to `agents/analyzers/0_ANALYZERS.md`:
 
 Set `status: draft`.
 
-If the user said yes to adding it to config (Step 2 Q5): add the name to `profile_analyzers` in `workspace/config.yaml`.
+If the user said yes to adding it to config (Step 2 Q5): add the name to `profile_analyzers` in `{workspace_root}/config.yaml`.
 
 Tell the user:
-> Your analyzer is registered with `status: draft`. Once you've reviewed and completed the TODOs in `agents/analyzers/[name]-analyzer.md`, change the status to `active` in `0_ANALYZERS.md` and ensure the name is in `workspace/config.yaml`. Then run `/ci:profile [competitor]` to test it against an existing snapshot.
+> Your analyzer is registered with `status: draft`. Once you've reviewed and completed the TODOs in `agents/analyzers/[name]-analyzer.md`, change the status to `active` in `0_ANALYZERS.md` and ensure the name is in `{workspace_root}/config.yaml`. Then run `/ci:profile [competitor]` to test it against an existing snapshot.
 
 ---
 

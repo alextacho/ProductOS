@@ -63,7 +63,7 @@ Determine whether this is an extractor, market synthesizer, or command.
 |--------|-------------|
 | `profile_section` in frontmatter starting with `## Analysis —`, or applies a named framework per-competitor, writes to profile | Profile analyzer |
 | `profile_section` in frontmatter (other), or `## Research Steps`, or references to fetching URLs | Extractor |
-| `stage: 2`, `frameworks:`, `## Analysis Process`, writes to `workspace/syntheses/` | Market synthesizer |
+| `stage: 2`, `frameworks:`, `## Analysis Process`, writes to `{workspace_root}/syntheses/` | Market synthesizer |
 | References to reading profiles/syntheses and returning output to the user, no fetching | Command |
 | `## Steps`, user-facing instructions, invoked as `/something` | Command |
 
@@ -126,7 +126,7 @@ Run the appropriate contract check.
 |-------|---------------|------------|
 | `name` ends in `-synthesizer` | frontmatter or derivable | Derive |
 | `stage` is `2` | frontmatter | Ask — if Stage 1, block the import (see Step 2) |
-| `owns` defined | what file/section it writes (must be `workspace/syntheses/`) | Ask |
+| `owns` defined | what file/section it writes (must be `{workspace_root}/syntheses/`) | Ask |
 | `frameworks` defined | named framework(s) applied | Derive from Analysis Process if present |
 | `stale_after` defined | how many days before the brief nudges the user to re-run | Ask: "How often should this run? (e.g. 30, 60, 90 days)" — suggest 90 days for strategic frameworks, 30 days for tactical/positioning ones |
 | `## Inputs` table present | lists all inputs with types | Draft from content |
@@ -192,11 +192,11 @@ Write the adapted file.
 
 After placing an extractor file, verify the profile-synthesizer will leverage the new snapshot section.
 
-Read `skills/profile-synthesizer.md` Step 1. Look for the extractor's `profile_section` heading in the section table.
+Read `skills/profile-builder.md` Step 1. Look for the extractor's `profile_section` heading in the section table.
 
 **If the section is already listed:** note it in the Step 7 summary as confirmed.
 
-**If NOT listed:** add a row to the Step 1 table in `skills/profile-synthesizer.md`:
+**If NOT listed:** add a row to the Step 1 table in `skills/profile-builder.md`:
 
 ```markdown
 | `## [Section]` | [What this section tells you — 1 sentence, derived from the extractor's description] |
@@ -211,7 +211,7 @@ If it's unclear what the synthesizer should infer, write a `TODO:` placeholder a
 
 Add a row to the right index with `status: draft`.
 
-- **Profile analyzer** → row in `agents/analyzers/0_ANALYZERS.md`. Ask: "Should I also add this to `workspace/config.yaml` so it runs on the next pipeline run? (It will stay as `draft` in the index until you activate it.)"
+- **Profile analyzer** → row in `agents/analyzers/0_ANALYZERS.md`. Ask: "Should I also add this to `{workspace_root}/config.yaml` so it runs on the next pipeline run? (It will stay as `draft` in the index until you activate it.)"
 - **Extractor** → row in `agents/extractors/0_EXTRACTORS.md`
 - **Market synthesizer** → row in `agents/synthesizers/0_SYNTHESIZERS.md`; include the `Stale after` value confirmed during the contract check
 

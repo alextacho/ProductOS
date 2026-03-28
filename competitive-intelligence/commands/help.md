@@ -41,9 +41,7 @@ Print the full reference in the order below. Within each group, sort commands al
 PIPELINE
   /ci:run             Run the competitive analysis pipeline
   /ci:profile         Re-synthesize one competitor's profile from latest snapshot
-  /ci:market          Cross-competitor: positioning map, Porter's 5, whitespace
-  /ci:differentiation Cross-competitor: JTBD gaps, underserved segments, positioning rec
-  /ci:blue-ocean      Cross-competitor: Blue Ocean value curve
+  /ci:market          Cross-competitor: positioning map, JTBD gaps, whitespace
 
 WORKSPACE
   /ci:setup       First-run setup — create workspace files and seed competitors
@@ -78,13 +76,13 @@ a brief.
 Usage:
   /ci:run
   /ci:run <competitor-name>
-  /ci:run --name <extractor-name>
+  /ci:run --extractor <extractor-name>
   /ci:run force_run=true
   /ci:run deep-dive <competitor-name>
 
 Options:
   <competitor-name>          Run only this competitor (bypasses cadence check)
-  --name <extractor-name>    Run only this extractor for due competitors
+  --extractor <extractor-name>    Run only this extractor for due competitors
   force_run=true             Run all competitors regardless of cadence
   deep-dive                  Return full analysis instead of brief summary
   alert-check                Run all direct-tier competitors immediately
@@ -107,7 +105,7 @@ Examples:
   /ci:run Aha.io                  → run Aha.io only
   /ci:run force_run=true          → refresh everything now
   /ci:run deep-dive Productboard  → full analysis for Productboard
-  /ci:run --name changelog-extractor Aha.io  → just changelog for Aha.io
+  /ci:run --extractor changelog-extractor Aha.io  → just changelog for Aha.io
 ```
 
 ---
@@ -127,7 +125,7 @@ Usage:
 Options:
   (no args)          Publish the most recent brief
   --brief <date>     Publish a specific brief by date (YYYY-MM-DD)
-  --all              Publish all briefs in workspace/briefs/, oldest first
+  --all              Publish all briefs in {workspace_root}/briefs/, oldest first
 
 Examples:
   /ci:publish-brief                      → publish latest brief
@@ -147,9 +145,9 @@ gaps, and strategic implications.
 Usage:
   /ci:market
 
-No options. Reads all profiles in workspace/profiles/.
+No options. Reads all profiles in {workspace_root}/profiles/.
 Requires at least 2 profiles with populated SWOT sections.
-Writes to workspace/syntheses/market-[date].md.
+Writes to {workspace_root}/syntheses/market-[date].md.
 
 When to run:
   Monthly, after a major competitor move, or before a
@@ -159,30 +157,11 @@ When to run:
 ---
 
 ```
-/ci:blue-ocean
-──────────────────────────────────────────────────────────
-Run Blue Ocean value curve analysis across all competitor
-profiles. Identifies where the market converges (red ocean)
-and where uncontested strategic space exists.
-
-Usage:
-  /ci:blue-ocean
-
-No options. Reads all profiles in workspace/profiles/.
-Writes to workspace/syntheses/blue-ocean-[date].md.
-
-When to run:
-  Quarterly or when doing strategy work.
-```
-
----
-
-```
 /ci:setup
 ──────────────────────────────────────────────────────────
-First-run setup. Creates workspace/ourproduct.md,
-workspace/positioning.md, and optionally seeds
-workspace/competitors.yaml.
+First-run setup. Creates {workspace_root}/{product_name}.md,
+{workspace_root}/config.yaml, and optionally seeds
+{workspace_root}/competitors.yaml.
 
 Usage:
   /ci:setup
@@ -210,16 +189,20 @@ needing attention.
 ```
 /ci:schedule
 ──────────────────────────────────────────────────────────
-Configure OS-level cron jobs for automated pipeline runs.
+Configure scheduled runs for any /ci: command. Defaults to Desktop
+scheduled tasks — persistent, no expiry, runs without an open session.
+Falls back to session-bound jobs (expire in 3 days) if Desktop is unavailable.
 
 Usage:
   /ci:schedule
+  /ci:schedule add /ci:run weekly Monday 9am
+  /ci:schedule remove /ci:run
+  /ci:schedule session /ci:run daily 8:30am   (session-bound only)
+  /ci:schedule list
+  /ci:schedule clear
 
-Interactive. Shows current schedule, then lets you set cadences
-for /ci:run, /ci:market, and /ci:blue-ocean. Writes to
-workspace/schedule.yaml and registers entries in crontab.
-
-Cron jobs fire even when no Claude Code session is open.
+Desktop tasks require the Claude Desktop app. Session-bound jobs
+require Claude to be open and expire after 3 days.
 ```
 
 ---

@@ -25,7 +25,7 @@ Arguments can be passed inline, e.g. `/ci:run force_run=true` or `/ci:run aha.io
 | `--with-market` | flag | off | After the full pipeline completes, run all active market synthesizers via `/ci:market` |
 
 **Parsing rules:**
-- A bare name that matches a competitor in `workspace/competitors.yaml` → set as `competitor_filter`
+- A bare name that matches a competitor in `{workspace_root}/competitors.yaml` → set as `competitor_filter`
 - `force_run=true` or `force_run` alone → set `force_run: true`
 - `deep-dive`, `alert-check`, `brief` → set `run_mode`
 - `--extractor <name>` → set `extractor_filter` to that name; activates single-extractor mode (see below)
@@ -37,6 +37,8 @@ Arguments can be passed inline, e.g. `/ci:run force_run=true` or `/ci:run aha.io
 ## Steps
 
 ### Step 1 — Parse arguments and confirm scope
+
+`{workspace_root}` and `{product_name}` are available from context (set in `AGENTS.md` by `/ci:setup`).
 
 Parse the arguments above. Then show a one-line confirmation before running:
 
@@ -71,13 +73,13 @@ Use this flow when `--extractor <name>` is set.
    > "Extractor '[name]' not found or not active. Run /ci:status to see available extractors."
 
 3. **For each in-scope competitor — in parallel:**
-   - Resolve the most recent snapshot file in `workspace/snapshots/[competitor]/`
+   - Resolve the most recent snapshot file in `{workspace_root}/snapshots/[competitor]/`
    - If no snapshot exists, create a new one (using the same header format as the orchestrator)
    - Run the specified extractor for this competitor, writing its section to the snapshot
    - After the extractor completes: run the delta detector against the previous snapshot (or skip if no previous snapshot)
    - Run the profile synthesizer with the updated snapshot — this re-synthesizes SWOT, Our Read, Direction
 
-4. **Update registry:** set `last_updated` in `workspace/competitors.yaml` only for competitors where the extractor succeeded.
+4. **Update registry:** set `last_updated` in `{workspace_root}/competitors.yaml` only for competitors where the extractor succeeded.
 
 5. **Report results:**
    ```

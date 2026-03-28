@@ -33,12 +33,12 @@ This extractor returns data, not interpretation. What the pricing structure mean
 
 ### Step 1 — Find the pricing page
 
-**Check the registry first.** Look for `pricing_url` on this competitor's entry in `workspace/competitors.yaml`.
+**Check the registry first.** Look for `pricing_url` on this competitor's entry in `{workspace_root}/competitors.yaml`.
 
 - If `pricing_url` is set (not null): fetch that URL directly. Skip Stages A and B.
 - If `pricing_url` is null or missing: proceed to Stage A.
 
-Once a pricing URL is successfully confirmed, write it back to `workspace/competitors.yaml` under `pricing_url` for this competitor. Future runs skip discovery entirely.
+Once a pricing URL is successfully confirmed, write it back to `{workspace_root}/competitors.yaml` under `pricing_url` for this competitor. Future runs skip discovery entirely.
 
 ---
 

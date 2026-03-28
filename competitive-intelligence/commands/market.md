@@ -16,14 +16,14 @@ Read all competitor profiles and run the market-synthesizer to produce a single 
 
 ### Step 1 — Check profiles
 
-Read all `.md` files in `workspace/profiles/`. Verify each has a populated `## SWOT` and `## Our Read` section. If missing, include the profile anyway but flag reduced confidence.
+`{workspace_root}` and `{product_name}` are available from context (set in `AGENTS.md` by `/ci:setup`).
+
+Read all `.md` files in `{workspace_root}/profiles/`. Verify each has a populated `## SWOT` and `## Our Read` section. If missing, include the profile anyway but flag reduced confidence.
 
 If fewer than 2 profiles exist: abort with:
 > "Need at least 2 competitor profiles to run market synthesis. Run /ci:run first."
 
 ### Step 2 — Read context
-
-Read `workspace/competitor-analysis/config.yaml` for `{workspace_root}` and `{product_name}`. If missing, use defaults (`workspace/competitor-analysis` and `""`).
 
 Read in parallel:
 - `{workspace_root}/{product_name}.md` — product context and positioning (or empty string if missing)
@@ -40,7 +40,7 @@ Follow the full analysis process in `agents/synthesizers/market-synthesizer.md`,
 ### Step 4 — Confirm output
 
 After the synthesizer writes its file, print the path:
-> `Market synthesis written → workspace/syntheses/market-[date].md`
+> `Market synthesis written → {workspace_root}/syntheses/market-[date].md`
 
 ### Step 5 — Summary to user
 

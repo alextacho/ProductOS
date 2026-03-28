@@ -1,6 +1,6 @@
 ---
 name: brief-composer
-description: Takes the delta list and competitor synthesis from a run and formats them into the weekly competitive brief. Output saved to workspace/briefs/[YYYY-MM-DD].md and returned to the user.
+description: Takes the delta list and competitor synthesis from a run and formats them into the weekly competitive brief. Output saved to {workspace_root}/briefs/[YYYY-MM-DD].md and returned to the user.
 layer: system
 runs: once, after all competitor-synthesizers complete
 modes: brief, alert, deep-dive
@@ -10,7 +10,7 @@ modes: brief, alert, deep-dive
 
 ## Role
 
-Read the delta list and synthesis from this run. Format them into the appropriate output — a brief, an alert, or a deep-dive — based on the run mode. Save the output to `workspace/briefs/[YYYY-MM-DD].md`. Return it to the user.
+Read the delta list and synthesis from this run. Format them into the appropriate output — a brief, an alert, or a deep-dive — based on the run mode. Save the output to `{workspace_root}/briefs/[YYYY-MM-DD].md`. Return it to the user.
 
 The brief is the only thing the user sees directly. Everything else in the pipeline exists to make the brief sharp, accurate, and fast to read.
 
@@ -148,7 +148,7 @@ Do not pad the brief with stale data from a failed fetch.
 
 ### Step 5 — Save to file
 
-Write the complete brief to `workspace/briefs/[run_date].md`.
+Write the complete brief to `{workspace_root}/briefs/[run_date].md`. `{workspace_root}` is passed in as an explicit input from the orchestrator (originally sourced from `AGENTS.md`).
 
 If a file already exists for this date (same-day re-run), overwrite it — do not create a duplicate.
 
@@ -168,4 +168,4 @@ If a file already exists for this date (same-day re-run), overwrite it — do no
 
 - **Fetching new data** — all inputs come from the pipeline; this skill formats, it does not research
 - **Running analysis** — synthesis has already happened; the brief surfaces it, it does not re-analyze
-- **Storing profiles or changelogs** — the orchestrator and delta-detector own those writes; the brief-composer only writes to `workspace/briefs/`
+- **Storing profiles or changelogs** — the orchestrator and delta-detector own those writes; the brief-composer only writes to `{workspace_root}/briefs/`

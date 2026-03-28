@@ -1,10 +1,10 @@
 ---
 name: ci:setup
-description: Interactive first-run setup for the competitive analysis plugin. Creates a product context file, seeds workspace/competitors.yaml, and configures the pipeline. Run this before your first /ci:run.
+description: Interactive first-run setup for the competitive analysis plugin. Creates a product context file, seeds {workspace_root}/competitors.yaml, and configures the pipeline. Run this before your first /ci:run.
 type: command
 ---
 
-# /ci:run — Setup the Project Structure
+# /ci:setup — Setup the Project Structure
 
 ## Role
 
@@ -18,7 +18,7 @@ Walk the user through creating the required context files for the competitive an
 
 ### Step 1 — Check what exists
 
-Read `workspace/competitor-analysis/config.yaml` to resolve `{workspace_root}` and `{product_name}`. If the file doesn't exist or either value is not set, use defaults (`workspace/competitor-analysis` and `""` respectively) — Step 2 will confirm or change these.
+Read the `<!-- ci:config:start -->` block in `AGENTS.md` to resolve `{workspace_root}` and `{product_name}`. If the values are empty or the block is not yet populated, use defaults (`workspace/competitor-analysis` and `""` respectively) — Step 2 will confirm or change these.
 
 Check for each required and optional file under `{workspace_root}`:
 
@@ -52,11 +52,16 @@ Use the answer as `{product_name}`. This names your product context file: `{prod
 
 Strip any leading `./` or trailing `/` from the path.
 
-Copy `templates/config.TEMPLATE.yaml` to `workspace/competitor-analysis/config.yaml` and fill in the resolved values:
-- Set `workspace_root` to the user's chosen path (or `workspace/competitor-analysis` if default)
-- Set `product_name` to the answer from 2a
+Write the resolved values into the `<!-- ci:config:start -->` block in `AGENTS.md`:
 
-`workspace/competitor-analysis/config.yaml` is always the canonical bootstrap location. If the user chose a custom `workspace_root`, commands read it from this file to find the actual data directory.
+```
+workspace_root: [chosen path]
+product_name: [product name]
+```
+
+This is the single source of truth for `{workspace_root}` and `{product_name}`. All commands and agents read these values from context at session start — no per-command config reading required.
+
+Also copy `templates/config.TEMPLATE.yaml` to `{workspace_root}/config.yaml` and set `workspace_root` and `product_name` there too (used for distribution config and pipeline settings — not for path resolution).
 
 Create `{workspace_root}/` if it doesn't already exist.
 
@@ -64,7 +69,7 @@ Copy `context/signal-weights.md` → `{workspace_root}/context/signal-weights.md
 
 Do not overwrite any destination files that already exist.
 
-If `workspace/competitor-analysis/config.yaml` already exists with `workspace_root` and `product_name` set: skip this step and use the existing values.
+If the `AGENTS.md` config block already has `workspace_root` and `product_name` set: skip this step and use the existing values.
 
 ---
 

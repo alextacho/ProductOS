@@ -2,7 +2,7 @@
 name: market-synthesizer
 description: Cross-competitor market analysis. Combines competitive positioning map, JTBD gap analysis, whitespace/value curve, differentiation opportunities, and strategic implications into a single actionable document.
 stage: 2
-owns: "workspace/syntheses/market-[YYYY-MM-DD].md"
+owns: "{workspace_root}/syntheses/market-[YYYY-MM-DD].md"
 frameworks: competitive positioning map, jobs-to-be-done, value curve, differentiation mapping
 runs: on-demand via /ci:market
 stale_after: 30
@@ -24,9 +24,9 @@ This is Stage 2 synthesis — it runs once across all profiles. It does not fetc
 
 | Input | Type | Required | Notes |
 |-------|------|----------|-------|
-| `all_profiles` | markdown string[] | yes | Full content of all profiles in `workspace/profiles/` |
+| `all_profiles` | markdown string[] | yes | Full content of all profiles in `{workspace_root}/profiles/` |
 | `our_product_context` | string | yes | Content of `{workspace_root}/{product_name}.md` |
-| `previous_synthesis` | markdown string | no | Most recent `workspace/syntheses/market-*.md` — used to surface what changed |
+| `previous_synthesis` | markdown string | no | Most recent `{workspace_root}/syntheses/market-*.md` — used to surface what changed |
 | `run_date` | string (YYYY-MM-DD) | yes | Used in output filename |
 
 **Minimum viable input:** 2 competitor profiles with a populated `## Analysis — SWOT` section (or equivalent analyzer output). With fewer than 3 profiles, prepend output with: **"Analysis directional only — fewer than 3 competitor profiles available."**
@@ -192,7 +192,7 @@ Keep this section brief — 3–6 bullet points. It feeds the brief's "what chan
 
 ## Output Schema
 
-Write to `workspace/syntheses/market-[run_date].md`:
+Write to `{workspace_root}/syntheses/market-[run_date].md`:
 
 ```markdown
 # Market Analysis — [run_date]

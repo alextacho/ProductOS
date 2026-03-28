@@ -2,15 +2,15 @@
 
 Analyzers apply an analytical framework to a competitor's snapshot and write a named `## Analysis — [Framework]` section to the profile. Multiple analyzers can be active simultaneously — each owns its own section and runs independently.
 
-Analyzers are configured in `workspace/config.yaml` under `profile_analyzers`. The orchestrator runs all active analyzers in parallel after the profile builder completes.
+Analyzers are configured in `{workspace_root}/config.yaml` under `profile_analyzers`. The orchestrator runs all active analyzers in parallel after the profile builder completes.
 
-To add a new analyzer: run `/ci:new` and choose "Profile analyzer," or copy `TEMPLATE.md`, fill it in, add a row here, and add its name to `workspace/config.yaml`.
+To add a new analyzer: run `/ci:new` and choose "Profile analyzer," or copy `TEMPLATE.md`, fill it in, add a row here, and add its name to `{workspace_root}/config.yaml`.
 
 | Analyzer | Profile Section | Inputs | Status |
 |----------|----------------|--------|--------|
 | [swot-analyzer.md](./swot-analyzer.md) | `## Analysis — SWOT` | snapshot, existing profile section | active |
 
-_The orchestrator only runs analyzers listed in `workspace/config.yaml` under `profile_analyzers` AND with `status: active` here. Both must be true._
+_The orchestrator only runs analyzers listed in `{workspace_root}/config.yaml` under `profile_analyzers` AND with `status: active` here. Both must be true._
 
 ---
 
