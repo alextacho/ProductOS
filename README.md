@@ -29,19 +29,6 @@ claude plugin marketplace add alextacho/ProductOS
 claude plugin install competitive-intelligence@pProductOS
 ```
 
-### Other AI assistants (skills only)
-
-The `skills/*/SKILL.md` files follow the universal skill format and work with any tool that reads it. Commands (`/slash-commands`) are Claude-specific.
-
-| Tool | How to use | What works |
-|------|-----------|------------|
-| **Gemini CLI** | Copy skill folders to `.gemini/skills/` | Skills only |
-| **OpenCode** | Copy skill folders to `.opencode/skills/` | Skills only |
-| **Cursor** | Copy skill folders to `.cursor/skills/` | Skills only |
-| **Codex CLI** | Copy skill folders to `.codex/skills/` | Skills only |
-| **Kiro** | Copy skill folders to `.kiro/skills/` | Skills only |
-
-
 ## Plugins
 
 | Plugin | Job |

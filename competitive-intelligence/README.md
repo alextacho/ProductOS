@@ -8,8 +8,8 @@ A Claude Code plugin that runs a competitive analysis pipeline — extracts sign
 
 ```
 /ci:setup    ← run once to configure your workspace
-/ci:run      ← run the pipeline (weekly)
-/ci:market   ← cross-competitor analysis (monthly)
+/ci:run      ← run the pipeline
+/ci:market   ← cross-competitor analysis
 ```
 
 ---
