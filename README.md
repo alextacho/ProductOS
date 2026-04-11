@@ -26,7 +26,7 @@ Either use built in `/plugin` command within a Claude Code session or install vi
 claude plugin marketplace add alextacho/ProductOS
 
 # Step 2: Install individual plugins
-claude plugin install competitive-intelligence@pProductOS
+claude plugin install competitive-intelligence@ProductOS
 ```
 
 ## Plugins
